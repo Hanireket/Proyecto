@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hanireket</title>
+</head>
+<style>
+    body {
+            font-family: Arial, sans-serif;
+            margin: 10px, 10px;
+            padding: 0;
+            background-color: #000000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+        }
+    h1, h2, h3, h4 {
+            color: white;
+        }
+
+    main {
+        background-color: #5d3475;
+        margin: 10px;
+        height: auto;
+        width: 70%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+    }
+
+    form {
+
+        margin-bottom: 20px;
+        height: auto;
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .post {
+        height: auto;
+        width: 100%;
+    }
+
+    .themes {
+        height: auto;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .themes label {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+
+    }
+
+    label {
+        color: white;
+        margin: 5px;
+
+    }
+
+    input[type="text"] {
+        padding: 10px;
+        margin: 5px;
+        box-sizing: border-box;
+    }
+
+    textarea {
+        width: 97.5%;
+        height: 500px;
+        padding: 12px 20px;
+        margin: 5px;
+        border-radius: 4px;
+        text-align: justify;
+        font-size: 16px;
+        resize: none;
+        
+    }
+
+    input[type="checkbox"] {
+        text-decoration-color: white;
+        height: 25px;
+        width: 25px;
+
+    }
+    .actions .delete {
+
+        background-color: #ff0051;
+    }
+    input[type="submit"] {
+            color: white;
+            padding: 10px 20px;
+            background-color: #aa18ff;
+            border: none;
+            border-radius: 30%;
+            width: 80px;
+            color: white;
+            cursor: pointer;
+            align-self: flex-end;
+
+        }
+    span {
+        color: #ff0051;
+    }
+
+
+
+    section {
+        background-color: #5d3475;
+        margin: 10px;
+        height: auto;
+        width: 70%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    card {
+        background-color: #753468;
+        margin: 10px;
+        height: auto;
+        width: auto;
+        max-width: 45%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .data {
+        margin: 10px;
+        height: auto;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .dates {
+        display: flex;
+        justify-content: space-around;
+        align-items: self-end;
+    }
+
+    .selected {
+        color: white;
+        text-decoration: underline;
+        display: flex;
+
+    }
+
+    .actions {
+        margin: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    p {
+        color: white;
+        margin: 5px;
+
+    }
+
+
+</style>
+<body>
+
+
+
+    <h1>Página de Posts</h1>
+
+    <main>
+        <h2>Add New Post</h2>
+
+        <form th:action="@{/addPost}" th:object="${post}" method="post">
+            <h4>Select Theme(s)</h4>
+            <div class="themes">
+                <label>
+                    <input type="checkbox" th:field="*{isOca}"/>Ocakat :3
+                </label>
+                <label>
+                    <input type="checkbox" th:field="*{isArts}"/>Katarina Arts
+                </label>
+                <label>
+                    <input type="checkbox" th:field="*{isCplx}"/>Kato Complex
+                </label>
+                <label>
+                    <input type="checkbox" th:field="*{isHani}"/>Hanireket
+                </label>
+            </div>
+            <br>
+            <div class="post">
+                <label>Title</label>
+                <br>
+                <input type="text" th:field="*{title}"/>
+                <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+                <br>
+                <label>Text</label>
+                <br>
+                <textarea th:field="*{text}" maxlength="1000"></textarea>
+                <span th:if="${#fields.hasErrors('text')}" th:errors="*{text}"></span>    
+            </div>
+            <br>
+            <input type="submit" value="Add"/>
+        </form>
+    </main>
+
+
+        <h2>Posts</h2>
+
+    <section>
+
+        <card th:each="post: ${posts}">
+            <div class="data">
+                <div class="dates">
+                    <p th:text="${post.dateTime}">000</p>
+                    <div th:if="${post.isEdit}">
+                        <p>Editado</p>
+                        <p th:text="${post.editDateTime}">000</p>
+                    </div>
+                </div>
+                <h3 th:text="${post.title}">000</h3>
+                <p th:text="${post.text}">000</p>
+                
+                <h4>Theme(s)</h4>
+                <div class="selected">
+                    <p th:if="${post.isOca}">Ocakat :3</p>
+                    <p th:if="${post.isArts}">Katarina Arts</p>
+                    <p th:if="${post.isCplx}">Kato Complex</p>
+                    <p th:if="${post.isHani}">Hanireket</p>
+                </div>
+            </div>
+
+            <div class="actions">
+                <form th:action="@{/edit/{id}(id=${post.id})}" method="get">
+                    <input type="submit" value="Edit" />
+                </form>
+
+                <form th:action="@{/delete/{id}(id=${post.id})}" method="post">
+                    <input type="submit" value="Delete" class="delete"/>
+                </form>
+            </div>
+        </card>
+
+    </section>
+
+
+
+
+
+
+
+</body>
+</html>
