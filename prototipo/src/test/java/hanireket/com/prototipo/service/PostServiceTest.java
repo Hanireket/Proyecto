@@ -20,7 +20,7 @@ public class PostServiceTest {
 
 
     @Test
-    void whenSavingTask_thenRepositoryIsCalled() {
+    void whenSavingPost_thenRepositoryIsCalled() {
         Post post = new Post();
         post.setId(1L);
         post.setTitle("Post 1");
